@@ -52,6 +52,7 @@ actor LZFlowDecompress is Flowable
 	
 	be flowFinished() =>
 		@LZ_decompress_finish(decoder)
+		@LZ_decompress_close(decoder)
 		target.flowFinished()
 	
 	be flowReceived(dataIso:Any iso) =>
@@ -73,7 +74,8 @@ actor LZFlowDecompress is Flowable
 			let wr = @LZ_decompress_write(decoder, inPointer.offset(0), inSize.i32() )					
 			if wr < 0 then
 				lzret = @LZ_decompress_errno(decoder)
-				@fprintf[I32](@pony_os_stderr[Pointer[U8]](), ("lz decompression error: " + lzret.string() + "\n").cstring())
+				@fprintf[I32](@pony_os_stderr[Pointer[U8]](), ("lz decompression write error: " + lzret.string() + "\n").cstring())
+				@LZ_decompress_close(decoder)
 				return
 			end
 			
@@ -88,7 +90,8 @@ actor LZFlowDecompress is Flowable
 				end
 				if rd < 0 then
 					lzret = @LZ_decompress_errno(decoder)
-					@fprintf[I32](@pony_os_stderr[Pointer[U8]](), ("lz decompression error: " + lzret.string() + "\n").cstring())
+					@fprintf[I32](@pony_os_stderr[Pointer[U8]](), ("lz decompression read error: " + lzret.string() + "\n").cstring())
+					@LZ_decompress_close(decoder)
 					return
 				end
 				
