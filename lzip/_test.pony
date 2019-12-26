@@ -11,7 +11,7 @@ actor Main is TestList
 		test(_TestLargeStringDecompression)
 	
  	fun @runtime_override_defaults(rto: RuntimeOptions) =>
-		rto.ponyanalysis = true
+		//rto.ponyanalysis = true
 		rto.ponyminthreads = 2
 		rto.ponynoblock = true
 		rto.ponygcinitial = 0
