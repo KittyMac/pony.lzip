@@ -38,7 +38,7 @@ actor LZFlowDecompress is Flowable
 	
 	var decoder:Pointer[LZDecoder]
 	
-	fun _tag():USize => 101
+	fun _tag():USize => 119
 
 	new create(bufferSize':USize, target':Flowable tag) =>
 		target = target'
