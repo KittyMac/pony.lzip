@@ -1,5 +1,5 @@
 all:
-	corral run -- ponyc -o ./build/ ./lzip
+	corral run -- ponyc --print-code -o ./build/ ./lzip
 	./build/lzip
 
 test:
