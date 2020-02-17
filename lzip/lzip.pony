@@ -9,7 +9,7 @@ use "lib:lz"
 
 actor LZFlowDecompress is Flowable
 	
-	var lzret:U32 = LzErrno.lz_ok()
+	var lzret:U32 = LzErrnoEnum.ok()
 	
 	let target:Flowable tag
 	let bufferSize:USize
@@ -23,7 +23,7 @@ actor LZFlowDecompress is Flowable
 		bufferSize = bufferSize'
 		
 		decoder = @LZ_decompress_open()
-	    if decoder.is_null() or (@LZ_decompress_errno( decoder ) != LzErrno.lz_ok()) then
+	    if decoder.is_null() or (@LZ_decompress_errno( decoder ) != LzErrnoEnum.ok()) then
 			@LZ_decompress_close(decoder)
 			return
 		end
@@ -37,7 +37,7 @@ actor LZFlowDecompress is Flowable
 		let data:Any ref = consume dataIso
 			
 		// If the decompression error'd out, then we can't really do anything
-		if lzret != LzErrno.lz_ok() then
+		if lzret != LzErrnoEnum.ok() then
 			return
 		end
 		

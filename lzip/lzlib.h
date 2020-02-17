@@ -20,8 +20,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  
-#define uint8_t unsigned char
 
 #define LZ_API_VERSION 1
 
