@@ -14,7 +14,7 @@ actor LZFlowDecompress is Flowable
 	let target:Flowable tag
 	let bufferSize:USize
 	
-	var decoder:Pointer[LzDecoder] tag
+	var decoder:LzDecoderRef
 	
 	fun _tag():USize => 119
 
@@ -23,7 +23,7 @@ actor LZFlowDecompress is Flowable
 		bufferSize = bufferSize'
 		
 		decoder = @LZ_decompress_open()
-	    if decoder.is_null() or (@LZ_decompress_errno( decoder ) != LzErrnoEnum.ok()) then
+	  if decoder.is_null() or (@LZ_decompress_errno( decoder ) != LzErrnoEnum.ok()) then
 			@LZ_decompress_close(decoder)
 			return
 		end
@@ -56,7 +56,7 @@ actor LZFlowDecompress is Flowable
 				let inPointer = inBuffer.cpointer(inOffset)
 				inOffset = inOffset + inMaxSize
 				
-				let wr = @LZ_decompress_write(decoder, inPointer.offset(0), inMaxSize.i32() )					
+				let wr = @LZ_decompress_write(decoder, inPointer.offset(0), inMaxSize.u32() )					
 				if wr < 0 then
 					lzret = @LZ_decompress_errno(decoder)
 					@fprintf[I32](@pony_os_stderr[Pointer[U8]](), ("lz decompression write error: " + lzret.string() + "\n").cstring())
@@ -69,7 +69,7 @@ actor LZFlowDecompress is Flowable
 					let outBuffer = recover iso Array[U8](bufferSize) end
 					let outPointer = outBuffer.cpointer()
 				
-					let rd = @LZ_decompress_read(decoder, outPointer.offset(0), bufferSize.i32())
+					let rd = @LZ_decompress_read(decoder, outPointer.offset(0), bufferSize.u32())
 					if rd == 0 then
 						break
 					end
