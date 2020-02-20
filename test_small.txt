@@ -1,0 +1,1 @@
+This is a test document which has been compressed by lzip
