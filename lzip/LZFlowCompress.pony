@@ -9,12 +9,12 @@ use "lib:lz"
 
 actor LZFlowCompress is Flowable
 	
-	var lzret:U32 = _LzErrnoEnum.ok()
+	var lzret:U32 = LZErrno.ok
 	
 	let target:Flowable tag
 	let bufferSize:USize
 	
-	var encoder:_LzEncoderRef
+	var encoder:LZEncoderRef
 	
 	fun _tag():USize => 119
 
@@ -54,7 +54,7 @@ actor LZFlowCompress is Flowable
 		
     encoder = @LZ_compress_open(dict_size, match_len, U64.max_value() )
     
-	  if encoder.is_null() or (@LZ_compress_errno( encoder ) != _LzErrnoEnum.ok()) then
+	  if encoder.is_null() or (@LZ_compress_errno( encoder ) != LZErrno.ok) then
 			@LZ_compress_close(encoder)
 			return
 		end
@@ -95,7 +95,7 @@ actor LZFlowCompress is Flowable
 		let data:Any ref = consume dataIso
     
 		// If the compression error'd out, then we can't really do anything
-		if lzret != _LzErrnoEnum.ok() then
+		if lzret != LZErrno.ok then
 			return
 		end
 		
